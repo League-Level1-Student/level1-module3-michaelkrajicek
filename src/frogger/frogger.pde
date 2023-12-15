@@ -2,6 +2,8 @@ static final int WIDTH = 800;
 static final int HEIGHT = 600;
 int x = 400;
 int y = 550;
+int score = 0;
+int hits = 0;
 
 
 
@@ -10,11 +12,8 @@ int b = (int)random(0,400);
 int c = (int)random(0,400);
 int d = (int)random(0,400);
 
-int s = (int) random(0,2);
-int t = (int) random(0,2);
-int u = (int) random(0,2);
-int v = (int) random(0,2);
 
+ PImage blood;
  PImage back;
  PImage carLeft;
  PImage carRight;
@@ -34,10 +33,15 @@ public void settings() {
 
 public void setup() {
   
-c1 = new Car(a,52, 150, 5);
-c2 = new Car(b,175, 150, 5);
-c3 = new Car(c,300, 150, 5);
-c4 = new Car(d,425, 150, 5);
+int o = (int) random(0,2);
+int p = (int) random(0,2);
+int q = (int) random(0,2);
+int r = (int) random(0,2);
+  
+c1 = new Car(a,52, 150, 5, o==0? true:false);
+c2 = new Car(b,175, 150, 5, p==0? true:false);
+c3 = new Car(c,300, 150, 5, q==0? true:false);
+c4 = new Car(d,425, 150, 5, r==0? true:false);
 
    back = loadImage("froggerBackground.png");
    back.resize(800,600);
@@ -47,6 +51,7 @@ c4 = new Car(d,425, 150, 5);
         carRight.resize(150,100);
         frog = loadImage("frog.png");
         frog.resize(50,50);
+   blood = loadImage("red-blood-splatter-stain-illustration-vector.png");
   
 }
 
@@ -56,38 +61,33 @@ public void draw() {
  
  background(back);
   
- 
+  image (blood,x,y);
+  
+ textSize(20);
+ text("Score: "+score, 10, 25);
+ text("Deaths: "+hits, 10, 50);
         
   
-  if(s == 0){
+  if(c1.left){
    c1.moveLeft(); 
+  }else { c1.moveRight(); 
   }
   
-  if(s == 1){
-   c1.moveRight(); 
-  }
-  
-  if(t == 0){
+  if(c2.left){
    c2.moveLeft(); 
-  }
-  
-  if(t == 1){
+  }else {
    c2.moveRight(); 
   }
   
-  if(u == 0){
+  if(c3.left){
    c3.moveLeft(); 
-  }
-  
-  if(u == 1){
+  }else{
    c3.moveRight(); 
   }
   
-  if(v == 0){
+  if(c4.left){
    c4.moveLeft(); 
-  }
-  
-  if(v == 1){
+  }else{
    c4.moveRight(); 
   }
   
@@ -120,15 +120,20 @@ if (intersects(c1)){
  
  if (intersects(c4)){
  y = 550; 
-  
 }
 
+if (y==0){
+ score += 1;
+ y = 550;
+}
 
 }
 
 boolean intersects(Car car) {
  if ((y + 50 > car.getY() && y < car.getY()+car.sizeHeight) &&
                 (x + 50 > car.getX() && x < car.getX()+car.getSizeWidth())) {
+                  hits += 1;
+                  image (blood,car.getX(),car.getY());
    return true;
   }
  else  {
@@ -170,6 +175,11 @@ void keyPressed()
 
 class Car{
 int cx, cy, sizeWidth, speed;
+boolean left;
+
+boolean getLeft(){
+ return left; 
+}
 
 int getX() {
  return cx;
@@ -197,11 +207,17 @@ int getSizeHeight(){
 }
   
 
-int sizeHeight = (int)random(40,60);
+int sizeHeight = 100;
 
 void display()
   {
+    
+    if (left){
    image (carLeft, cx, cy);
+    } else {
+      image (carRight, cx, cy);
+    }
+   
    // fill(0,255,0);
     //rect(cx , cy,  sizeWidth, sizeHeight);
   }
@@ -211,7 +227,7 @@ void moveRight(){
   cx += speed;
   if (cx >= 800){
    cx = -sizeWidth; 
-   speed = (int)random(5,10);
+   speed = (int)random(3,7);
    
    /*
    sizeWidth = (int)random(50,200);
@@ -228,7 +244,7 @@ void moveLeft(){
  if (cx <= -sizeWidth){
    
   cx = 800;
-   speed = (int)random(5,10);
+   speed = (int)random(3,7);
    
    /*
    sizeWidth = (int)random(50,200);
@@ -239,7 +255,7 @@ void moveLeft(){
   
 }
 
-Car(int cx, int cy, int sizeWidth, int speed){
+Car(int cx, int cy, int sizeWidth, int speed, boolean left){
   
  
 
@@ -248,6 +264,7 @@ Car(int cx, int cy, int sizeWidth, int speed){
   this.cy = cy;
   this.sizeWidth = sizeWidth;
   this.speed = speed;
+  this.left = left;
   
   
 }

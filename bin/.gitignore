@@ -1,3 +1,4 @@
+/.DS_Store
 /Recipes.html
 /_01_intro_to_static/
 /_02_static_smiley_blues/
@@ -5,8 +6,7 @@
 /_05_cow_timer/
 /_06_frogger/
 /_99_extra/
+/frogger/
 /gridworld.jar
 /javazoom.jar
 /league_token/
-/frogger/
-/.DS_Store
